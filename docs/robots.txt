@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://rljudit.github.io/hr-monitor/sitemap.xml
