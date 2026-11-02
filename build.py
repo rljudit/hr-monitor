@@ -33,6 +33,9 @@ REQUIRED_TREND = ["id", "day", "published", "source", "url", "region", "topic", 
 
 e = lambda s: html.escape(str(s if s is not None else ""), quote=True)
 base_url = SITE["url"].rstrip("/")
+DEV = bool(SITE.get("dev"))
+BASE_PATH = "/" + base_url.split("://", 1)[-1].partition("/")[2].strip("/")
+BASE_PATH = BASE_PATH.rstrip("/") + "/"
 
 
 def slug(s):
@@ -118,7 +121,7 @@ def head(title, desc, path, prefix, og_type="website", extra=""):
 <meta property="og:locale" content="hu_HU">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#323c50">
-<link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml">
+{'<meta name="robots" content="noindex,nofollow">' + chr(10) if DEV else ''}<link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml">
 <link rel="alternate" type="application/rss+xml" title="{e(SITE['name'])}" href="{prefix}feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -133,7 +136,12 @@ def header(prefix, nav_html=None):
     if nav_html is None:
         nav_html = (f'<a href="{prefix}">Összes hír</a>'
                     f'<a class="trendbtn" href="{prefix}#trendek">Trendfigyelő</a>')
-    return f"""<header class="top">
+    ribbon = ""
+    if DEV:
+        live = SITE.get("live_url", "")
+        ribbon = (f'<div class="devbar"><div class="wrap">Fejlesztői változat, a keresők nem indexelik.'
+                  f'{f" Az élő oldal: <a href={chr(34)}{e(live)}{chr(34)}>{e(live)}</a>" if live else ""}</div></div>')
+    return ribbon + f"""<header class="top">
   <div class="wrap">
     <a class="brand" href="{prefix}" aria-label="{e(SITE['name'])}, kezdőlap">
       <span class="tile">{svg_icon("clock", 22, 2)}</span>
@@ -297,10 +305,10 @@ def build_impressum():
 
 
 def build_404():
-    out = head("Az oldal nem található", SITE["description"], "404.html", "/hr-monitor/") + header("/hr-monitor/")
-    out += """<div class="wrap"><main id="main" class="prose"><h1>Ez az oldal nem található</h1>
-<p>Lehet, hogy a hír archívumba került, vagy elírás van a címben.</p><p><a href="/hr-monitor/">Vissza a HR monitor főoldalára</a></p></main></div>"""
-    out += footer("/hr-monitor/")
+    out = head("Az oldal nem található", SITE["description"], "404.html", BASE_PATH) + header(BASE_PATH)
+    out += f"""<div class="wrap"><main id="main" class="prose"><h1>Ez az oldal nem található</h1>
+<p>Lehet, hogy a hír archívumba került, vagy elírás van a címben.</p><p><a href="{BASE_PATH}">Vissza a főoldalra</a></p></main></div>"""
+    out += footer(BASE_PATH)
     (OUT / "404.html").write_text(out, encoding="utf-8")
 
 
@@ -345,7 +353,8 @@ def build_sitemap(items):
     (OUT / "sitemap.xml").write_text(
         f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{body}</urlset>\n',
         encoding="utf-8")
-    (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {base_url}/sitemap.xml\n", encoding="utf-8")
+    robots = "User-agent: *\nDisallow: /\n" if DEV else f"User-agent: *\nAllow: /\nSitemap: {base_url}/sitemap.xml\n"
+    (OUT / "robots.txt").write_text(robots, encoding="utf-8")
 
 
 def build_assets(items, updated):

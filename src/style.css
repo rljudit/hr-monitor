@@ -193,3 +193,8 @@ footer a:hover{text-decoration:underline}
   .prose dl{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){.card,.stat{transition:none}}
+
+/* Fejlesztői változat sávja */
+.devbar{background:var(--yellow);color:var(--ink);font-size:13px;font-weight:600}
+.devbar .wrap{padding-block:8px}
+.devbar a{color:var(--ink)}
