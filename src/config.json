@@ -4,10 +4,57 @@
   "tagline": "a Sajtóművek HR-es AI sajtófigyelője",
   "description": "Globális munkaerőpiaci és HR-hírek magyar szűrővel: rövid összefoglaló és „Mit jelent ez itthon?” értelmezés, valamint Trendfigyelő a munkahelyi jelenségekről. Naponta frissítve.",
   "url": "https://rljudit.github.io/hr-monitor",
-  "email": "hello@sajtomuvek.hu",
+  "email": "judit.losonczy@sajtomuvek.hu",
   "lang": "hu",
   "impressum": {
-   "host": "GitHub, Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA"
+   "rows": [
+    [
+     "Cégnév",
+     "Sajtóművek Bt."
+    ],
+    [
+     "Székhely",
+     "1192 Budapest, Gutenberg krt. 3."
+    ],
+    [
+     "Adószám",
+     ""
+    ],
+    [
+     "Cégjegyzékszám",
+     ""
+    ],
+    [
+     "Nyilvántartó hatóság",
+     "Fővárosi Törvényszék Cégbírósága"
+    ],
+    [
+     "Képviselő",
+     "Rákász István (ügyvezető)"
+    ],
+    [
+     "Kapcsolattartó",
+     "Rákász-Losonczy Judit"
+    ],
+    [
+     "E-mail",
+     "judit.losonczy@sajtomuvek.hu"
+    ],
+    [
+     "Telefonszám",
+     "+36 70 314 6980"
+    ],
+    [
+     "Weboldal",
+     "https://www.sajtomuvek.hu"
+    ],
+    [
+     "Tárhelyszolgáltató",
+     "GitHub, Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA"
+    ]
+   ],
+   "legal": "Az impresszum közzététele a 2001. évi CVIII. törvény (az elektronikus kereskedelmi szolgáltatások, valamint az információs társadalommal összefüggő szolgáltatások egyes kérdéseiről) 4. §-a alapján történik.",
+   "updated": "2026. november 2."
   }
  },
  "topics": [

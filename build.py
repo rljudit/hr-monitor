@@ -263,26 +263,32 @@ def build_article(a, items):
 # ---------------------------------------------------------------- egyéb oldalak
 def build_impressum():
     imp = SITE.get("impressum", {})
-    def v(k):
-        return e(imp[k]) if imp.get(k) else '<em>[kitöltendő]</em>'
+    def val(label, v):
+        if not v:
+            return '<em>[ellenőrzés alatt]</em>'
+        if v.startswith("http"):
+            return f'<a href="{e(v)}" target="_blank" rel="noopener">{e(v.split("//", 1)[1])}</a>'
+        if "@" in v and " " not in v:
+            return f'<a href="mailto:{e(v)}">{e(v)}</a>'
+        if label.lower().startswith("telefon"):
+            return f'<a href="tel:{e(v.replace(" ", ""))}">{e(v)}</a>'
+        return e(v)
+    rows = "".join(f"<dt>{e(k)}</dt><dd>{val(k, v)}</dd>" for k, v in imp.get("rows", []))
     out = head("Impresszum", f"A {SITE['name']} impresszuma és működési elvei.", "impresszum/", "../") + header("../")
     out += f"""
 <div class="wrap"><main id="main" class="prose">
   <h1>Impresszum</h1>
-  <dl>
-    <dt>Kiadvány</dt><dd>{e(SITE['name'])} – {e(SITE['tagline'])}</dd>
-    <dt>Kiadó</dt><dd>{v('publisher')}</dd>
-    <dt>Székhely</dt><dd>{v('address')}</dd>
-    <dt>Felelős szerkesztő</dt><dd>{v('editor')}</dd>
-    <dt>Kapcsolat</dt><dd>{e(SITE['email'])}</dd>
-    <dt>Tárhelyszolgáltató</dt><dd>{v('host')}</dd>
-  </dl>
+  <p>{e(SITE['name'])} – {e(SITE['tagline'])}</p>
+  <h2>A szolgáltató adatai</h2>
+  <dl>{rows}</dl>
+  <p>{e(imp.get('legal', ''))}</p>
   <h2>Hogyan készül?</h2>
   <p>A {e(SITE['name'])} nemzetközi statisztikai hivatalok, HR-szaklapok, kutatócégek és gazdasági hírportálok friss anyagait figyeli. A híreket mesterséges intelligencia válogatja és foglalja össze magyarul, saját szavakkal, és mindegyikhez rövid hazai értelmezést fűz („Mit jelent ez itthon?”). Csak olyan hír kerül fel, amelynek dátumát és számait az eredeti forrásban ellenőrizni lehetett.</p>
   <h2>Források és szerzői jog</h2>
   <p>A cikkek nem fordítások, hanem saját összefoglalások. Minden hír mellett szerepel az eredeti forrás neve és linkje; a teljes tartalom és a pontos megfogalmazás az eredeti kiadóé.</p>
   <h2>Hibát talált?</h2>
-  <p>Ha pontatlanságot lát, kérjük, írjon a fenti címre: javítjuk.</p>
+  <p>Ha pontatlanságot lát, kérjük, írjon a(z) {e(SITE['email'])} címre: javítjuk.</p>
+  <p class="note">Utolsó frissítés: {e(imp.get('updated', ''))}</p>
 </main></div>
 """
     out += footer("../")
